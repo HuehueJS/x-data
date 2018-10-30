@@ -1,7 +1,8 @@
 import { expect } from 'chai';
 import { XParser } from '../src/index';
+import { ParserSpec } from '../src/index';
 
-export class Math {
+class Math {
     constructor(
         public a: number,
         public b: number
@@ -12,6 +13,14 @@ export class Math {
     multiply(): number {
         return this.a * this.b;
     }
+}
+
+const parserSpec: ParserSpec<Math> = {
+    target: Math,
+    nestedTargets: {
+        a: (e) => e as number,
+    },
+    multiple: false
 }
 
 describe('XParser', () => {

@@ -1,6 +1,6 @@
 
 export interface Type<T> extends Function {
-  new (...args: any[]): T
+    new (...args: any[]): T
 }
 
 export interface Parser<E> {
@@ -19,3 +19,16 @@ export class XParser<E> {
         return rawData as E;
     }
 }
+
+export interface ObjectParserSpec<E> {
+    target: Type<E>;
+    nestedTargets: { [fieldName: string]: ParserSpec<any> };
+    multiple: boolean;
+}
+
+export interface FunctionalParser<E> {
+    (any): E;
+}
+
+
+export type ParserSpec<E> = ObjectParserSpec<E> | Type<E> | FunctionalParser<E>;
