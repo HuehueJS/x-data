@@ -1,0 +1,34 @@
+{
+  "name": "@huehuejs/x-data",
+  "version": "0.0.1",
+  "description": "Mutant Data",
+  "main": "index.js",
+  "scripts": {
+    "prebuild": "rm -rf dist",
+    "build": "tsc",
+    "postbuild": "cp package.json dist/",
+    "test": "nyc --reporter=html --reporter=text mocha test/**/*.spec.ts",
+    "predeploy": "npm run build",
+    "deploy": "cd dist/ && npm publish --access public",
+    "coverage": "nyc report --reporter=text-lcov | codeclimate-test-reporter"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HuehueJS/x-data.git"
+  },
+  "author": "HuehueJS",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/HuehueJS/x-data/issues"
+  },
+  "homepage": "https://github.com/HuehueJS/x-data#readme",
+  "devDependencies": {
+    "@types/mocha": "^5.2.5",
+    "chai": "^4.2.0",
+    "codeclimate-test-reporter": "^0.5.1",
+    "mocha": "^5.2.0",
+    "nyc": "^13.1.0",
+    "ts-node": "^7.0.1",
+    "typescript": "^3.1.4"
+  }
+}

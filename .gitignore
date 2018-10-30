@@ -1,0 +1,9 @@
+.*
+!.gitignore
+!.travis.yml
+!.nycrc
+**.log
+**.lock
+/dist
+/node_modules
+/coverage
