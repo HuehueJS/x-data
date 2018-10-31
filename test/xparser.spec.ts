@@ -68,5 +68,11 @@ describe('XParser', () => {
             const mathData = parser(rawData);
             checkBehavior(mathData);
         })
+        it('should work with simple nested', () => {
+            const rawData = rawMathData();
+            const parser = makeFromRecipe(parserRecipe);
+            const mathData = parser(rawData);
+            checkBehavior(mathData);
+        })
     })
 });
