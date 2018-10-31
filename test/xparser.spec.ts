@@ -2,6 +2,9 @@ import { expect } from 'chai';
 import { XParser } from '../src/parser';
 import { ParserRecipe } from '../src/index';
 import { makeSimpleParser } from '../src/parser';
+import { makeFromRecipe } from '../src/parser';
+
+const rawMathData = () => ({ a: 3, b: 5 });
 
 class Math {
     constructor(
@@ -25,24 +28,45 @@ const parserRecipe: ParserRecipe<Math> = {
     multiple: false
 }
 
+const checkBehavior = (mathData: Math) => {
+    expect(mathData.multiply()).to.equal(15);
+}
+
 describe('XParser', () => {
 
     const mathParser = new XParser(Math);
 
     describe('#mutate', () => {
         it('should mutate the data', () => {
-            const rawData = { a: 3, b: 5 };
+            const rawData = rawMathData();
             const mathData = mathParser.mutate(rawData);
-            expect(mathData.multiply()).to.equal(15);
+            checkBehavior(mathData);
         })
     })
 
     describe('#makeSimpleParser', () => {
         const simpleParser = makeSimpleParser(Math);
         it('should mutate the data', () => {
-            const rawData = { a: 3, b: 5 };
+            const rawData = rawMathData();
             const mathData = simpleParser(rawData);
-            expect(mathData.multiply()).to.equal(15);
+            checkBehavior(mathData);
+        })
+    })
+
+    describe("#makeFromRecipe", () => {
+        it('should work with only a type', () => {
+            const justAType: ParserRecipe<Math> = Math;
+            const rawData = rawMathData();
+            const parser = makeFromRecipe(justAType);
+            const mathData = parser(rawData);
+            checkBehavior(mathData);
+        })
+        it('should work with only a function', () => {
+            const justAType: ParserRecipe<Math> = makeSimpleParser(Math);
+            const rawData = rawMathData();
+            const parser = makeFromRecipe(justAType);
+            const mathData = parser(rawData);
+            checkBehavior(mathData);
         })
     })
 });
