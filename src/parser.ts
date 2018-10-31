@@ -1,5 +1,10 @@
 import { Type, FunctionalParser, ParserRecipe } from "./";
 
+const isAnounymous = (obj: any) => {
+    return obj.name == "";
+}
+
+
 export function makeSimpleParser<E>(type: Type<E>): FunctionalParser<E> {
     return (it) => {
         it.__proto__ = type.prototype;
@@ -8,11 +13,10 @@ export function makeSimpleParser<E>(type: Type<E>): FunctionalParser<E> {
 }
 
 export function makeFromRecipe<E>(parserRecipe: ParserRecipe<E>): FunctionalParser<E> {
-    console.log(parserRecipe, typeof parserRecipe);
-    if ('prototype' in parserRecipe) {
+    if (!isAnounymous(parserRecipe)) {
         return makeSimpleParser(parserRecipe as Type<E>);
     }
-    if (typeof parserRecipe === "function") {
+    if (typeof parserRecipe == "function") {
         return parserRecipe as FunctionalParser<E>;
     }
     return (it) => it as E;
