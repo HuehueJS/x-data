@@ -15,7 +15,6 @@ export interface FunctionalParser<E> {
 export interface ObjectParserRecipe<E> {
     target: Type<E> | FunctionalParser<E>;
     nestedTargets: { [fieldName: string]: ParserRecipe<any> };
-    multiple: boolean;
 }
 
 export type ParserRecipe<E> = ObjectParserRecipe<E> | Type<E> | FunctionalParser<E>;

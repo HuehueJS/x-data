@@ -33,6 +33,12 @@ export function makeSimpleParser<E>(type: Type<E>): FunctionalParser<E> {
     }
 }
 
+export function makeFunctionalParser<E>(func: (_: any) => E): FunctionalParser<E> {
+    return (it) => {
+        return func(it);
+    }
+}
+
 export function makeFromObjectRecipe<E>(parserRecipe: ObjectParserRecipe<E>): FunctionalParser<E> {
     return new ObjectParser(
         makeFromRecipe(parserRecipe.target),
