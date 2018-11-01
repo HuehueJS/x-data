@@ -1,8 +1,9 @@
 import { expect } from 'chai';
-import { XParser, makeFunctionalParser } from '../src/parser';
+import { XParser, makeFromFunction, makeFromString } from '../src/parser';
 import { ParserRecipe } from '../src/index';
-import { makeSimpleParser } from '../src/parser';
+import { makeFromType } from '../src/parser';
 import { makeFromRecipe } from '../src/parser';
+import { ParserRepositoryBuilder } from '../src/repository';
 
 class Math {
     constructor(
@@ -67,9 +68,8 @@ class Rational {
 
 }
 
-const simpleRationalParser = makeSimpleParser(Rational);
-
-const numberOrRationalParser = makeFunctionalParser((it) => typeof it == "number" ? it : simpleRationalParser(it));
+const rationalParserRef = makeFromString("Rational");
+const numberOrRationalParser = makeFromFunction((it, repository) => typeof it == "number" ? it : rationalParserRef(it, repository));
 
 const rationalParserRecipe: ParserRecipe<Rational> = {
     target: Rational,
@@ -78,7 +78,6 @@ const rationalParserRecipe: ParserRecipe<Rational> = {
         denominator: numberOrRationalParser
     }
 }
-
 
 describe('XParser', () => {
 
@@ -92,8 +91,8 @@ describe('XParser', () => {
         })
     })
 
-    describe('#makeSimpleParser', () => {
-        const simpleParser = makeSimpleParser(Math);
+    describe('#makeFromType', () => {
+        const simpleParser = makeFromType(Math);
         it('should mutate the data', () => {
             const rawData = rawMathData();
             const mathData = simpleParser(rawData);
@@ -110,7 +109,7 @@ describe('XParser', () => {
             checkMathBehavior(mathData);
         })
         it('should work with only a function', () => {
-            const justAType: ParserRecipe<Math> = makeSimpleParser(Math);
+            const justAType: ParserRecipe<Math> = makeFromType(Math);
             const rawData = rawMathData();
             const parser = makeFromRecipe(justAType);
             const mathData = parser(rawData);
@@ -125,6 +124,9 @@ describe('XParser', () => {
 
 
         const rationalParser = makeFromRecipe(rationalParserRecipe);
+        const repositoryBuilder = new ParserRepositoryBuilder();
+        repositoryBuilder.add('Rational', rationalParser);
+        const repository = repositoryBuilder.build();
 
         it('should work with a complex type', () => {
             const rawData = {
@@ -140,7 +142,7 @@ describe('XParser', () => {
                 numerator: { numerator: 40, denominator: 4 },
                 denominator: 2
             };
-            const rationalData = rationalParser(rawData);
+            const rationalData = rationalParser(rawData,repository);
             expect(rationalData.toNumber()).to.equals(5);
         })
 
@@ -149,7 +151,7 @@ describe('XParser', () => {
                 numerator: { numerator: 40, denominator: { numerator: 16, denominator: 4 } },
                 denominator: 2
             };
-            const rationalData = rationalParser(rawData);
+            const rationalData = rationalParser(rawData, repository);
             expect(rationalData.toNumber()).to.equals(5);
         })
     })

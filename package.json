@@ -31,5 +31,8 @@
     "nyc": "^13.1.0",
     "ts-node": "^7.0.1",
     "typescript": "^3.1.4"
+  },
+  "dependencies": {
+    "@huehuejs/common-lang": "^0.1.0"
   }
 }
