@@ -74,8 +74,8 @@ const numberOrRationalParser = makeFromFunction((it, repository) => typeof it ==
 const rationalParserRecipe: ParserRecipe<Rational> = {
     target: Rational,
     nestedTargets: {
-        numerator: numberOrRationalParser,
-        denominator: numberOrRationalParser
+        numerator: "number|Rational",
+        denominator: "number|Rational"
     }
 }
 
@@ -125,9 +125,10 @@ describe('XParser', () => {
 
         const rationalParser = makeFromRecipe(rationalParserRecipe);
         const repositoryBuilder = new ParserRepositoryBuilder();
-        repositoryBuilder.add('Rational', rationalParser);
-        const repository = repositoryBuilder.build();
-
+        const repository = repositoryBuilder
+            .add("Rational", rationalParser)
+            .add("number|Rational",numberOrRationalParser)
+            .build();
         it('should work with a complex type', () => {
             const rawData = {
                 numerator: 10,
