@@ -1,29 +1,7 @@
-import { Type, FunctionalParser, ParserRecipe, ObjectParserRecipe, Parser } from "./";
+import { Type, FunctionalParser, ParserRecipe, ObjectParserRecipe, Parser, Reducers } from "./";
 import { ParserRepository } from "./repository";
 import { noop, getattr } from "@huehuejs/common-lang";
-
-/**
- * @todo common-lang
- */
-const isAnounymous = (obj: any) => {
-    return obj.name == "";
-}
-
-const reduceToObject = (acc, [k, v]) => Object.assign(acc, { [k as string]: v });
-
-const transformValue = it => ([k, v]) => ([k, it(v)]);
-
-const Mappers = {
-    Value: transformValue
-}
-
-const Reducers = {
-    Object: reduceToObject
-}
-
-/**
- * ------------
- */
+import { Mappers } from "."
 
 class RefParser implements Parser<any>{
 
@@ -88,17 +66,14 @@ export function makeFromString(name: string): FunctionalParser<any> {
 
 export function makeFromObjectRecipe<E>(parserRecipe: ObjectParserRecipe<E>): FunctionalParser<E> {
     return new ObjectParser(
-        makeFromRecipe(parserRecipe.target),
-        Object.entries(parserRecipe.nestedTargets)
+        makeFromType(parserRecipe.target),
+        Object.entries(parserRecipe.nestedTargets || {})
             .map(Mappers.Value(makeFromRecipe))
             .reduce(Reducers.Object, {})
     ).asFunctionalParser()
 }
 
 export function makeFromRecipe<E>(parserRecipe: ParserRecipe<E> | string): FunctionalParser<E> {
-    if (!isAnounymous(parserRecipe) && typeof parserRecipe == "function") {
-        return makeFromType(parserRecipe as Type<E>);
-    }
     if (typeof parserRecipe == "function") {
         return parserRecipe as FunctionalParser<E>;
     }

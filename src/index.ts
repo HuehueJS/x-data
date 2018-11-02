@@ -13,12 +13,42 @@ export interface Parser<E> {
 }
 
 export interface ObjectParserRecipe<E> {
-    target: Type<E> | FunctionalParser<E> | string;
+    target: Type<E>;
     nestedTargets?: { [fieldName: string]: ParserRecipe<any> | string };
 }
 
-export type ParserRecipe<E> = ObjectParserRecipe<E> | Type<E> | FunctionalParser<E>;
+export type ParserRecipe<E> = ObjectParserRecipe<E> | FunctionalParser<E>;
 
 export interface RepositoryRecipe {
     [name: string]: ParserRecipe<any>;
 }
+
+
+/**
+ * @todo common-lang
+ */
+export const isAnounymous = (obj: any) => {
+    return obj.name == "";
+}
+
+const reduceToObject = (acc, [k, v]) => Object.assign(acc, { [k as string]: v });
+
+const transformValue = it => ([k, v]) => ([k, it(v)]);
+
+const setAtObject = obj => ([k, v]) => obj[k] = v;
+
+export const Mappers = {
+    Value: transformValue
+}
+
+export const Reducers = {
+    Object: reduceToObject
+}
+
+export const Iter = {
+    SetAt: setAtObject
+}
+
+/**
+ * ------------
+ */

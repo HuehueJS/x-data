@@ -102,7 +102,7 @@ describe('XParser', () => {
 
     describe("#makeFromRecipe", () => {
         it('should work with only a type', () => {
-            const justAType: ParserRecipe<Math> = Math;
+            const justAType: ParserRecipe<Math> = { target: Math };
             const rawData = rawMathData();
             const parser = makeFromRecipe(justAType);
             const mathData = parser(rawData);
@@ -126,8 +126,8 @@ describe('XParser', () => {
         const rationalParser = makeFromRecipe(rationalParserRecipe);
         const repositoryBuilder = new ParserRepositoryBuilder();
         const repository = repositoryBuilder
-            .add("Rational", rationalParser)
-            .add("number|Rational", numberOrRationalParser)
+            .addParser("Rational", rationalParser)
+            .addParser("number|Rational", numberOrRationalParser)
             .build();
         it('should work with a complex type', () => {
             const rawData = {

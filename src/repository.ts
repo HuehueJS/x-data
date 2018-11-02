@@ -1,5 +1,6 @@
-import { FunctionalParser, Type } from "."
+import { FunctionalParser, ParserRecipe, RepositoryRecipe, Mappers, Iter, Type } from "."
 import { noop, getattr } from "@huehuejs/common-lang";
+import { makeFromRecipe, makeFromType } from "./parser";
 
 
 export interface ParserRepository {
@@ -40,9 +41,26 @@ export class ParserRepositoryBuilder {
 
     }
 
-    add(name: string, parser: FunctionalParser<any>): ParserRepositoryBuilder {
+    addParser(name: string, parser: FunctionalParser<any>): ParserRepositoryBuilder {
         this.repository[name] = parser;
         return this;
+    }
+
+    addType(type: Type<any>) {
+        this.repository[type.name] = makeFromType(type);
+        return this;
+    }
+
+    addRecipe(repositoryRecipe: RepositoryRecipe): ParserRepositoryBuilder {
+        Object.entries(repositoryRecipe)
+            .map(Mappers.Value(makeFromRecipe))
+            .forEach(Iter.SetAt(this.repository));
+        return this;
+    }
+
+    addParserRecipe(name: string, recipe: ParserRecipe<any>): ParserRepositoryBuilder {
+        const parser = makeFromRecipe(recipe);
+        return this.addParser(name, parser);
     }
 
     build(): ParserRepository {

@@ -1,5 +1,49 @@
 import { makeFromRecipe, makeFromFunction } from "../src/parser";
 import { expect } from "chai";
+import { ParserRepositoryBuilder } from "../src/repository";
+import { RepositoryRecipe, Parser, FunctionalParser } from "../src";
+
+
+
+export class Planet {
+    name: string//"Tatooine"
+    rotationPeriod: number//"23"
+    orbitalPeriod: number//"304"
+    diameter: number//"10465"
+    climate: string//"arid"
+    gravity: string//"1 standard"
+    terrain: string//"desert"
+    surfaceWater: number//"1"
+    population: number//"200000"
+    residents: Array<string>
+    films: Array<string>
+    created: Date//"2014-12-09T13:50:49.641000Z"
+    edited: Date//"2014-12-21T20:48:04.175778Z"
+    url: string//"https://swapi.co/api/planets/1/"
+}
+
+const recipe: RepositoryRecipe = {
+    stringToNumber: makeFromFunction((it: string) => parseInt(it)),
+    stringToDate: makeFromFunction((it: string) => new Date(it)),
+    Planet: {
+        target: Planet,
+        nestedTargets: {
+            rotationPeriod: 'stringToNumber',
+            orbitalPeriod: 'stringToNumber',
+            diameter: 'stringToNumber',
+            surfaceWater: 'stringToNumber',
+            population: 'stringToNumber',
+            created: 'stringToDate',
+            edited: 'stringToDate',
+        }
+    }
+}
+
+const repositoryBuilder = new ParserRepositoryBuilder();
+const repository = repositoryBuilder
+    .addRecipe(recipe)
+    .build();
+
 
 const rawPlanet = {
     name: 'Tatooine',
@@ -36,38 +80,10 @@ const rawPlanet = {
 };
 
 
-export class Planet {
-    name: string//"Tatooine"
-    rotationPeriod: number//"23"
-    orbitalPeriod: number//"304"
-    diameter: number//"10465"
-    climate: string//"arid"
-    gravity: string//"1 standard"
-    terrain: string//"desert"
-    surfaceWater: number//"1"
-    population: number//"200000"
-    residents: Array<string>
-    films: Array<string>
-    created: Date//"2014-12-09T13:50:49.641000Z"
-    edited: Date//"2014-12-21T20:48:04.175778Z"
-    url: string//"https://swapi.co/api/planets/1/"
-}
-
-const planetParser = makeFromRecipe({
-    target: Planet,
-    nestedTargets: {
-        rotationPeriod: makeFromFunction((it: string) => parseInt(it)),
-        orbitalPeriod: makeFromFunction((it: string) => parseInt(it)),
-        diameter: makeFromFunction((it: string) => parseInt(it)),
-        surfaceWater: makeFromFunction((it: string) => parseInt(it)),
-        population: makeFromFunction((it: string) => parseInt(it)),
-        created: makeFromFunction((it: string) => new Date(it)),
-        edited: makeFromFunction((it: string) => new Date(it)),
-    }
-})
-
 describe("Swapi", () => {
     it("Get Planet", () => {
+        const planetParser = repository[Planet.name] as FunctionalParser<Planet>;
+        console.log(planetParser);
         const planet = planetParser(rawPlanet)
         expect(planet).to.instanceof(Planet)
         expect(typeof planet.name).to.equals("string")
