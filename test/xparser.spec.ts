@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { XParser, makeFromFunction, makeFromString } from '../src/parser';
-import { ParserRecipe } from '../src/index';
+import { ParserRecipe, FunctionalParser } from '../src/index';
 import { makeFromType } from '../src/parser';
 import { makeFromRecipe } from '../src/parser';
 import { ParserRepositoryBuilder } from '../src/repository';
@@ -127,7 +127,7 @@ describe('XParser', () => {
         const repositoryBuilder = new ParserRepositoryBuilder();
         const repository = repositoryBuilder
             .add("Rational", rationalParser)
-            .add("number|Rational",numberOrRationalParser)
+            .add("number|Rational", numberOrRationalParser)
             .build();
         it('should work with a complex type', () => {
             const rawData = {
@@ -143,11 +143,12 @@ describe('XParser', () => {
                 numerator: { numerator: 40, denominator: 4 },
                 denominator: 2
             };
-            const rationalData = rationalParser(rawData,repository);
+            const rationalData = rationalParser(rawData, repository);
             expect(rationalData.toNumber()).to.equals(5);
         })
 
         it('should work with a very recursive complex type', () => {
+            const rationalParser = repository["Rational"] as FunctionalParser<Rational>;
             const rawData = {
                 numerator: { numerator: 40, denominator: { numerator: 16, denominator: 4 } },
                 denominator: 2

@@ -8,7 +8,6 @@ export interface FunctionalParser<E> {
     (any, ParserRepository?): E;
 }
 
-
 export interface Parser<E> {
     mutate(rawData: any, parserRepository?: ParserRepository): E;
 }
@@ -19,3 +18,7 @@ export interface ObjectParserRecipe<E> {
 }
 
 export type ParserRecipe<E> = ObjectParserRecipe<E> | Type<E> | FunctionalParser<E>;
+
+export interface RepositoryRecipe {
+    [name: string]: ParserRecipe<any>;
+}
