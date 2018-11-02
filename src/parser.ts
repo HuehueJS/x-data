@@ -64,6 +64,10 @@ class ObjectParser<E> implements Parser<E> {
 }
 
 
+export function toArray<E>(parser: FunctionalParser<E>): FunctionalParser<Array<E>> {
+    return (any: Array<any>, repository: ParserRepository) => any.map(it => parser(it, repository));
+}
+
 export function makeFromType<E>(type: Type<E>): FunctionalParser<E> {
     return (it) => {
         it.__proto__ = type.prototype;
