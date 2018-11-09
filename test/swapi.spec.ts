@@ -26,15 +26,16 @@ const recipe: RepositoryRecipe = {
     stringToNumber: makeFromFunction((it: string) => parseInt(it)),
     stringToDate: makeFromFunction((it: string) => new Date(it)),
     Planet: {
-        target: Planet,
-        nestedTargets: {
-            rotationPeriod: 'stringToNumber',
-            orbitalPeriod: 'stringToNumber',
-            diameter: 'stringToNumber',
-            surfaceWater: 'stringToNumber',
-            population: 'stringToNumber',
-            created: 'stringToDate',
-            edited: 'stringToDate',
+        type: Planet,
+        $: {
+            stringToDate: ['created', 'edited'],
+            stringToNumber: [
+                'rotationPeriod',
+                'orbitalPeriod',
+                'diameter',
+                'surfaceWater',
+                'population',
+            ]
         }
     }
 }
@@ -83,7 +84,6 @@ const rawPlanet = {
 describe("Swapi", () => {
     it("Get Planet", () => {
         const planetParser = repository[Planet.name] as FunctionalParser<Planet>;
-        console.log(planetParser);
         const planet = planetParser(rawPlanet)
         expect(planet).to.instanceof(Planet)
         expect(typeof planet.name).to.equals("string")

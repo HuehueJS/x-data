@@ -65,11 +65,20 @@ export function makeFromString(name: string): FunctionalParser<any> {
 }
 
 export function makeFromObjectRecipe<E>(parserRecipe: ObjectParserRecipe<E>): FunctionalParser<E> {
-    return new ObjectParser(
-        makeFromType(parserRecipe.target),
-        Object.entries(parserRecipe.nestedTargets || {})
+    const fieldsParsers =
+        Object.entries(parserRecipe.fields || {})
             .map(Mappers.Value(makeFromRecipe))
             .reduce(Reducers.Object, {})
+    const $Parsers =
+        Object.entries(parserRecipe.$ || {})
+            .map(Mappers.Combine)
+            .reduce(Reducers.Flat, [])
+            .map(Mappers.Swap)
+            .map(Mappers.Value(makeFromString))
+            .reduce(Reducers.Object, {})
+    return new ObjectParser(
+        makeFromType(parserRecipe.type),
+        { ...fieldsParsers, ...$Parsers }
     ).asFunctionalParser()
 }
 

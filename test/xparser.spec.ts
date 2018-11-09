@@ -25,8 +25,8 @@ const checkMathBehavior = (mathData: Math) => {
 }
 
 const mathParserRecipe: ParserRecipe<Math> = {
-    target: Math,
-    nestedTargets: {
+    type: Math,
+    fields: {
         a: (e) => e as number,
         b: (e) => e as number
     }
@@ -72,8 +72,8 @@ const rationalParserRef = makeFromString("Rational");
 const numberOrRationalParser = makeFromFunction((it, repository) => typeof it == "number" ? it : rationalParserRef(it, repository));
 
 const rationalParserRecipe: ParserRecipe<Rational> = {
-    target: Rational,
-    nestedTargets: {
+    type: Rational,
+    fields: {
         numerator: "number|Rational",
         denominator: "number|Rational"
     }
@@ -102,7 +102,7 @@ describe('XParser', () => {
 
     describe("#makeFromRecipe", () => {
         it('should work with only a type', () => {
-            const justAType: ParserRecipe<Math> = { target: Math };
+            const justAType: ParserRecipe<Math> = { type: Math };
             const rawData = rawMathData();
             const parser = makeFromRecipe(justAType);
             const mathData = parser(rawData);
