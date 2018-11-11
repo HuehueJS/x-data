@@ -1,5 +1,6 @@
-import { FunctionalParser, ParserRecipe, RepositoryRecipe, Mappers, Iter, Type } from "."
+import { FunctionalParser, ParserRecipe, RepositoryRecipe, Type } from "."
 import { noop, getattr } from "@huehuejs/common-lang";
+import { Mappers, Iter } from "@huehuejs/common-lang/array"
 import { makeFromRecipe, makeFromType } from "./parser";
 
 

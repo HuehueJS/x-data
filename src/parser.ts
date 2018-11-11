@@ -1,7 +1,7 @@
-import { Type, FunctionalParser, ParserRecipe, ObjectParserRecipe, Parser, Reducers } from "./";
+import { Type, FunctionalParser, ParserRecipe, ObjectParserRecipe, Parser } from "./";
 import { ParserRepository } from "./repository";
 import { noop, getattr } from "@huehuejs/common-lang";
-import { Mappers } from "."
+import { Mappers, Reducers } from "@huehuejs/common-lang/array"
 
 class RefParser implements Parser<any>{
 
