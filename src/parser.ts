@@ -91,17 +91,3 @@ export function makeFromRecipe<E>(parserRecipe: ParserRecipe<E> | string): Funct
     }
     return makeFromObjectRecipe(parserRecipe);
 }
-
-export class XParser<E> {
-    constructor(
-        protected type: Type<E>
-    ) {
-
-    }
-
-    mutate(rawData: any): E {
-        rawData.__proto__ = this.type.prototype;
-        return rawData as E;
-    }
-
-}

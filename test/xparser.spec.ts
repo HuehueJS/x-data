@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { XParser, makeFromFunction, makeFromString } from '../src/parser';
+import { makeFromFunction, makeFromString } from '../src/parser';
 import { ParserRecipe, FunctionalParser } from '../src/index';
 import { makeFromType } from '../src/parser';
 import { makeFromRecipe } from '../src/parser';
@@ -81,12 +81,12 @@ const rationalParserRecipe: ParserRecipe<Rational> = {
 
 describe('XParser', () => {
 
-    const mathParser = new XParser(Math);
+    const mathParser = makeFromType(Math);
 
     describe('#mutate', () => {
         it('should mutate the data', () => {
             const rawData = rawMathData();
-            const mathData = mathParser.mutate(rawData);
+            const mathData = mathParser(rawData);
             checkMathBehavior(mathData);
         })
     })
