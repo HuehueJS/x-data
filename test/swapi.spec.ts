@@ -23,13 +23,13 @@ export class Planet {
 }
 
 const recipe: RepositoryRecipe = {
-    stringToNumber: makeFromFunction((it: string) => parseInt(it)),
+    stringToInt: makeFromFunction((it: string) => parseInt(it)),
     stringToDate: makeFromFunction((it: string) => new Date(it)),
     Planet: {
         type: Planet,
         $: {
             stringToDate: ['created', 'edited'],
-            stringToNumber: [
+            stringToInt: [
                 'rotationPeriod',
                 'orbitalPeriod',
                 'diameter',
