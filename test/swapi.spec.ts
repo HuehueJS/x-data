@@ -1,9 +1,16 @@
-import { makeFromRecipe, makeFromFunction } from "../src/parser";
+import { makeFromRecipe, makeFromFunction, toArray, makeFromString } from "../src/parser";
 import { expect } from "chai";
 import { ParserRepositoryBuilder } from "../src/repository";
 import { RepositoryRecipe, Parser, FunctionalParser } from "../src";
 
 
+export class LazyObject {
+    constructor(
+        protected originUrl: string
+    ) {
+
+    }
+}
 
 export class Planet {
     name: string//"Tatooine"
@@ -15,8 +22,8 @@ export class Planet {
     terrain: string//"desert"
     surfaceWater: number//"1"
     population: number//"200000"
-    residents: Array<string>
-    films: Array<string>
+    residents: Array<LazyObject>
+    films: Array<LazyObject>
     created: Date//"2014-12-09T13:50:49.641000Z"
     edited: Date//"2014-12-21T20:48:04.175778Z"
     url: string//"https://swapi.co/api/planets/1/"
@@ -25,8 +32,13 @@ export class Planet {
 const recipe: RepositoryRecipe = {
     stringToInt: makeFromFunction((it: string) => parseInt(it)),
     stringToDate: makeFromFunction((it: string) => new Date(it)),
+    urlToObject: makeFromFunction((url: string) => new LazyObject(url)),
     Planet: {
         type: Planet,
+        fields: {
+            residents: toArray(makeFromString('urlToObject')),
+            films: toArray(makeFromString('urlToObject')),
+        },
         $: {
             stringToDate: ['created', 'edited'],
             stringToInt: [
@@ -89,5 +101,11 @@ describe("Swapi", () => {
         expect(typeof planet.name).to.equals("string")
         expect(typeof planet.population).to.equal("number")
         expect(planet.created).to.instanceof(Date)
+        planet.residents.forEach((it) => {
+            expect(it).to.instanceof(LazyObject)
+        })
+        planet.films.forEach((it) => {
+            expect(it).to.instanceof(LazyObject)
+        })
     })
 })
