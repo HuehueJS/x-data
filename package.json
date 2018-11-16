@@ -1,6 +1,6 @@
 {
   "name": "@huehuejs/x-data",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Mutant Data",
   "main": "index.js",
   "scripts": {
@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/HuehueJS/x-data#readme",
   "devDependencies": {
+    "@types/chai": "^4.1.7",
     "@types/mocha": "^5.2.5",
     "chai": "^4.2.0",
     "codeclimate-test-reporter": "^0.5.1",
@@ -30,5 +31,8 @@
     "nyc": "^13.1.0",
     "ts-node": "^7.0.1",
     "typescript": "^3.1.4"
+  },
+  "dependencies": {
+    "@huehuejs/common-lang": "^0.1.1"
   }
 }
