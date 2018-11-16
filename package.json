@@ -1,6 +1,6 @@
 {
   "name": "@huehuejs/x-data",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Mutant Data",
   "main": "index.js",
   "scripts": {
